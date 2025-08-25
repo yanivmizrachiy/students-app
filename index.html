@@ -1,0 +1,32 @@
+<!doctype html><html lang=""he"" dir=""rtl""><head>
+  <title>Students App — ניהול תלמידים</title>
+  <meta charset=""utf-8""/><meta name=""viewport"" content=""width=device-width,initial-scale=1""/>
+<script src=""https://cdn.tailwindcss.com""></script>
+<link rel=""stylesheet"" href=""common/branding.css""/>
+<script>tailwind.config={theme:{extend:{colors:{brand:'#00b3ff',brand2:'#7c3aed'}}}}</script>
+<script src=""https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"" defer></script>
+</head><body class=""app-bg""><div class=""maxw p-6"">
+  <header class=""mb-6 flex items-center justify-between"">
+    <h1 class=""text-3xl md:text-4xl font-bold title-shine"">Students App — ניהול תלמידים</h1>
+    <nav class=""flex gap-2 text-sm""><a class=""btn"" href=""https://yanivmizrachiy.github.io/"" target=""_blank"">דף GitHub</a></nav>
+  </header>
+  <main class=""glass p-5 md:p-8""><div class="space-y-4">
+  <div class="flex gap-2 flex-wrap">
+    <input id="name" class="input w-48" placeholder="שם תלמיד">
+    <input id="class" class="input w-32" placeholder="כיתה">
+    <button id="add" class="btn btn-primary">➕ הוסף</button>
+    <button id="export" class="btn">⬇️ יצוא JSON</button>
+  </div>
+  <table class="table"><thead><tr><th>שם</th><th>כיתה</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+  <script>
+    const rows=document.querySelector('#rows'); const data=JSON.parse(localStorage.getItem('students')||'[]');
+    function save(){localStorage.setItem('students',JSON.stringify(data))}
+    function render(){rows.innerHTML=''; data.forEach((s,i)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${s.n}</td><td>${s.c}</td><td><button data-i='${i}' class=btn>מחק</button></td>`; rows.appendChild(tr);});}
+    document.querySelector('#add').onclick=()=>{const n=document.querySelector('#name').value.trim(); const c=document.querySelector('#class').value.trim(); if(n&&c){data.push({n,c}); save(); render();}};
+    rows.onclick=e=>{if(e.target.tagName==='BUTTON'){data.splice(+e.target.dataset.i,1); save(); render();}};
+    document.querySelector('#export').onclick=()=>{const a=document.createElement('a'); const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); a.href=URL.createObjectURL(blob); a.download='students.json'; a.click();};
+    render();
+  </script>
+</div></main>
+  <footer class=""mt-6 text-xs opacity-70"">© yanivmizrachiy — RTL • Glass • Tailwind CDN</footer>
+</div></body></html>
